@@ -30,8 +30,7 @@ function App() {
         x = newX;
         y = newY;
 
-        console.log(x);
-        console.log(y);
+        console.log(x + ' ' + y);
       }
     };
 
