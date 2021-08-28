@@ -43,11 +43,9 @@ function App() {
 
   return (
     <div className="App">
-      <canvas className="js-paint paint-canvas" width="600" height="300"></canvas>
+      <canvas className="js-paint paint-canvas" width="800" height="400"></canvas>
     </div>
   );
 }
 
 export default App;
-
-// HOW THE HELL TO DRAW IN SIMPLE HTML????????? :'(
