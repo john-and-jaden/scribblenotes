@@ -7,29 +7,37 @@ import { useEffect, useState } from 'react';
 const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
 
 function App() {
+  var [noteData, setNoteData] = useState(initializeNoteData());
   var [barProgress, setBarProgress] = useState(0);
+  var [prevBarProgress, setPrevBarProgress] = useState(0);
 
   let barX = 0;
+
+  function initializeNoteData() {
+    let temp = {};
+    for (let note of notes) {
+      temp[note] = [];
+    }
+    return temp;
+  }
+
+  function updateNoteData(note, xPos) {
+    setNoteData((state) => {
+      return {
+        ...state,
+        note: [...state[note], xPos],
+      };
+    });
+  }
+
+  function roundToNote(yPos) {
+    // TODO: make this floor a y-position to the nearest note
+  }
 
   function musicTest() {
     // console.log(synth);
     // synth.triggerAttackRelease('C4', '8n');
   }
-
-  const musicInterval = setInterval(() => {
-    barX++;
-    if (barX > 800) {
-      barX = 0;
-    }
-
-    // SEE: tonejs (https://tonejs.github.io/)
-    // todo: have a dictionary of Synth objects for each note,
-    // manage each object's attack/release based on whether we currently
-    // have a point within the y-range of that note under the bar
-    // let idx = barX % notes.length;
-    // let synth = new Tone.Synth().toDestination();
-    // synth.triggerAttackRelease(notes[idx], '4n');
-  }, 10);
 
   useEffect(() => {
     let x = 0;
@@ -68,18 +76,32 @@ function App() {
     paintCanvas.addEventListener('mouseup', stopDrawing);
     paintCanvas.addEventListener('mouseout', stopDrawing);
 
+    // https://animejs.com/documentation/#timelineBasics
     let timeline = anime
       .timeline({
         update: ({ progress }) => {
           setBarProgress(progress);
           console.log(progress);
         },
-        loop: true
+        loop: true,
       })
       .add({
         duration: 4000,
       });
   }, []);
+
+  useEffect(() => {
+    // noteData arrays will need to store x positions where we toggle starting and stopping
+    console.log(noteData);
+    for (let note in noteData) {
+      for (let data in noteData[note]) {
+        if (data <= barProgress && data > prevBarProgress) {
+          console.log('hit note end / beginning!');
+        }
+      }
+    }
+    setPrevBarProgress(barProgress);
+  }, [barProgress]);
 
   return (
     <div className='App'>
